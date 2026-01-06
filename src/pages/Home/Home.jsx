@@ -5,6 +5,35 @@ const Home = () => {
   const [shortUrl, setShortUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
+  // Function to generate random 6-8 character code
+  const generateShortCode = () => {
+    const characters =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const length = Math.floor(Math.random() * 3) + 6; // 6 to 8 characters
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return result;
+  };
+
+  const handleShorten = () => {
+    if (!longUrl) return alert("Please paste a URL first!");
+
+    const code = generateShortCode();
+    const finalUrl = `https://tiny.url/${code}`;
+    setShortUrl(finalUrl);
+    setCopied(false);
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(shortUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <section
       className="relative min-h-screen pt-24 flex items-center justify-center bg-cover bg-center"
