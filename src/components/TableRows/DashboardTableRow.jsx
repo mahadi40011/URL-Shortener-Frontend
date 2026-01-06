@@ -19,6 +19,9 @@ const DashboardTableRow = () => {
 
   return (
     <tr className="border-b border-gray-200 hover:bg-green-50 transition-colors">
+      <td className="py-3 px-6 text-center border-r border-gray-200 font-medium">
+        1
+      </td>
       <td className="py-3 px-6 text-left border-r border-gray-200 font-medium truncate max-w-xs">
         https://drive.google.com/file/d/1r5a7hs0QdoFYptxVmfrwpzBGqfrBFWXX/view
       </td>

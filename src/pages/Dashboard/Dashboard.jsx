@@ -10,6 +10,9 @@ const Dashboard = () => {
           <table className="table-auto w-full bg-white">
             <thead className="sticky top-0">
               <tr className="bg-green-500/80 text-white uppercase font-semibold text-xs leading-normal">
+                <th className="py-4 px-6 border-r border-gray-300 text-center">
+                  serial no
+                </th>
                 <th className="py-4 px-6 border-r border-gray-300 text-left">
                   Original URL
                 </th>
