@@ -1,13 +1,14 @@
 import React from "react";
 import Container from "../../components/Shared/Container";
+import DashboardTableRow from "../../components/TableRows/DashboardTableRow";
 
 const Dashboard = () => {
   return (
-    <div className="pt-24">
+    <div className="pt-24 pb-8">
       <Container>
-        <div className="overflow-x-auto rounded-xl border border-gray-300">
+        <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-96px)] rounded-xl border border-gray-300">
           <table className="table-auto w-full bg-white">
-            <thead>
+            <thead className="sticky top-0">
               <tr className="bg-green-500/80 text-white uppercase font-semibold text-xs leading-normal">
                 <th className="py-4 px-6 border-r border-gray-300 text-left">
                   Original URL
@@ -28,7 +29,18 @@ const Dashboard = () => {
               </tr>
             </thead>
 
-            <tbody className="text-gray-700 text-sm font-light"></tbody>
+            <tbody className="text-gray-700 text-sm font-light">
+              <DashboardTableRow />
+              <DashboardTableRow />
+              <DashboardTableRow />
+              <DashboardTableRow />
+              <DashboardTableRow />
+              <DashboardTableRow />
+              <DashboardTableRow />
+              <DashboardTableRow />
+              <DashboardTableRow />
+              <DashboardTableRow />
+            </tbody>
           </table>
         </div>
       </Container>
