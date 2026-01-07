@@ -1,20 +1,48 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CiUnlock } from "react-icons/ci";
-import { FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineEmail } from "react-icons/md";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
+import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
+  const { signIn, signInWithGoogle, loading, setLoading } = useAuth();
   const [showEmailLogin, setShowEmailLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state || "/";
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  // Email/Password Login
+  const onSubmit = (data) => {
+    setLoading(true);
+    signIn(data.email, data.password)
+      .then((result) => {
+        console.log("User Logged In:", result.user);
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        console.error("Login Error:", error.message);
+      })
+      .finally(setLoading(false));
+  };
+
+  // Google Login
+  const handleGoogleLogin = () => {
+    setLoading(true);
+    signInWithGoogle()
+      .then(() => navigate(from, { replace: true }))
+      .catch((err) => console.log(err))
+      .finally(setLoading(false));
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50 px-4 py-12">
@@ -34,7 +62,10 @@ const Login = () => {
         </div>
 
         {/* Social Login */}
-        <button className="w-full flex items-center justify-center gap-3 border border-gray-200 bg-gray-100 rounded-xl py-3.5 text-gray-700 font-semibold hover:bg-gray-200 transition-all active:scale-[0.98]">
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full flex items-center justify-center gap-3 border border-gray-200 bg-gray-100 rounded-xl py-3.5 text-gray-700 font-semibold hover:bg-gray-200 transition-all active:scale-[0.98]"
+        >
           <FcGoogle size={24} />
           Continue with Google
         </button>
@@ -52,12 +83,12 @@ const Login = () => {
             onClick={() => setShowEmailLogin(true)}
             className="w-full flex items-center justify-center gap-3 text-green-600 font-bold py-3.5 rounded-xl border border-green-200 bg-green-100 hover:bg-green-200 transition-all"
           >
-            <MdOutlineEmail size={24}/>
+            <MdOutlineEmail size={24} />
             Sign in with Email
           </button>
         ) : (
           <form
-            // onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit)}
             className="space-y-5 animate-in fade-in duration-500"
           >
             <div>
@@ -130,9 +161,10 @@ const Login = () => {
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full bg-green-600/80 text-white py-4 rounded-xl font-bold hover:bg-green-700/80 shadow-lg shadow-green-600/20 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
             >
-               login
+              {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
         )}
