@@ -18,8 +18,8 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm();
+    formState: { errors, isValid, isDirty },
+  } = useForm({ mode: "all" });
 
   // Email/Password Login
   const onSubmit = (data) => {
@@ -95,19 +95,27 @@ const Login = () => {
               <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">
                 Email Address
               </label>
-              <input
-                type="email"
-                autoComplete="email"
-                placeholder="name@gmail.com"
-                {...register("email", { required: "Email is required" })}
-                className={`w-full px-5 py-3.5 border rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/10 text-gray-700 transition-all ${
-                  errors.email
-                    ? "border-red-400 bg-red-50/30"
-                    : "border-gray-200 focus:border-green-500"
-                }`}
-              />
+              <div className="relative">
+                <input
+                  type="email"
+                  placeholder="name@gmail.com"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
+                  })}
+                  className={`w-full px-5 py-3.5 border rounded-xl focus:outline-none focus:ring-4 focus:ring-green-500/10 text-gray-700 transition-all ${
+                    errors.email
+                      ? "border-red-400 bg-red-50/30"
+                      : "border-gray-200 focus:border-green-500"
+                  }`}
+                />
+                <MdOutlineEmail
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
+              </div>
               {errors.email && (
-                <p className="text-red-500 text-xs font-medium mt-1.5 ml-1">
+                <p className="text-red-500 text-xs mt-1.5 ml-1">
                   {errors.email.message}
                 </p>
               )}
@@ -161,10 +169,19 @@ const Login = () => {
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full bg-green-600/80 text-white py-4 rounded-xl font-bold hover:bg-green-700/80 shadow-lg shadow-green-600/20 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+              disabled={loading || !isValid || !isDirty}
+              className={`w-full py-4 rounded-xl font-bold shadow-lg transition-all active:scale-[0.98] disabled:opacity-70 cursor-pointer disabled:cursor-not-allowed ${
+                !isValid || !isDirty
+                  ? "bg-gray-200 text-gray-400 shadow-none"
+                  : "bg-green-600 text-white hover:bg-green-700 shadow-green-600/20"
+              }`}
             >
-              {loading ? "Signing in..." : "Sign In"}
+              <div className="flex items-center justify-center gap-2">
+                {loading && (
+                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                )}
+                {loading ? "Signing in..." : "Sign In"}
+              </div>
             </button>
           </form>
         )}
