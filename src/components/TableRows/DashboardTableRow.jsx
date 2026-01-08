@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaRegCopy } from "react-icons/fa6";
+import { TiTick } from "react-icons/ti";
 
 const DashboardTableRow = ({ urlData, index }) => {
+  const [copied, setCopied] = useState(false);
   const { longUrl, shortCode, totalVisit, createdAt } = urlData;
+  const shortUrl = `${import.meta.env.VITE_SERVER_URL}/${shortCode}`;
   const dateObj = new Date(createdAt);
 
   const date = dateObj.toLocaleDateString("en-GB");
@@ -11,6 +14,11 @@ const DashboardTableRow = ({ urlData, index }) => {
     minute: "2-digit",
     hour12: true,
   });
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(shortUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <tr className="border-b border-gray-200 hover:bg-green-50 transition-colors">
@@ -24,16 +32,19 @@ const DashboardTableRow = ({ urlData, index }) => {
         {shortCode}
       </td>
       <td className="py-3 px-6 flex items-center justify-between gap-3 border-r border-gray-200">
-        <span className="text-blue-400 truncate max-w-44">{`${
-          import.meta.env.VITE_SERVER_URL
-        }/${shortCode}`}</span>
+        <span className="text-blue-400 truncate max-w-44">{shortUrl}</span>
         <button
+          onClick={handleCopyToClipboard}
           className="flex items-center gap-1 
                text-gray-600 hover:text-blue-600
                bg-gray-100 hover:bg-green-100
                px-3 py-2 rounded-md cursor-pointer transition"
         >
-          <FaRegCopy className="text-sm" />
+          {copied ? (
+            <TiTick className="text-sm" />
+          ) : (
+            <FaRegCopy className="text-sm" />
+          )}
         </button>
       </td>
 
