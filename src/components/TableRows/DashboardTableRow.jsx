@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { FaRegCopy } from "react-icons/fa6";
 import { TiTick } from "react-icons/ti";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
-const DashboardTableRow = ({ urlData, index }) => {
+const DashboardTableRow = ({ urlData, index, refetch }) => {
   const [copied, setCopied] = useState(false);
-  const { longUrl, shortCode, totalVisit, createdAt } = urlData;
+  const axiosSecure = useAxiosSecure();
+  const { _id, longUrl, shortCode, totalVisit, createdAt } = urlData;
   const shortUrl = `${import.meta.env.VITE_SERVER_URL}/${shortCode}`;
   const dateObj = new Date(createdAt);
 
@@ -14,10 +16,31 @@ const DashboardTableRow = ({ urlData, index }) => {
     minute: "2-digit",
     hour12: true,
   });
+
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(shortUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDelete = async (id) => {
+    const proceed = window.confirm(
+      "Are you sure you want to delete this link?"
+    );
+
+    if (proceed) {
+      try {
+        const { data } = await axiosSecure.delete(`/delete-url/${id}`);
+
+        if (data.success) {
+          refetch();
+          alert(data.message || "Deleted successfully!");
+        }
+      } catch (error) {
+        console.error("Delete Error:", error);
+        alert(error.response?.data?.message || "Could not delete the URL");
+      }
+    }
   };
 
   return (
@@ -59,7 +82,10 @@ const DashboardTableRow = ({ urlData, index }) => {
       </td>
       <td className="py-3 px-6 text-left text-xs">
         <div className="flex items-center justify-center gap-3">
-          <button className="px-4 py-1.5 rounded-lg bg-red-200 text-red-800 font-bold text-xs uppercase cursor-pointer tracking-wider hover:bg-red-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+          <button
+            onClick={() => handleDelete(_id)}
+            className="px-4 py-1.5 rounded-lg bg-red-200 text-red-800 font-bold text-xs uppercase cursor-pointer tracking-wider hover:bg-red-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
             Delete
           </button>
         </div>
