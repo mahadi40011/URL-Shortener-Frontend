@@ -1,31 +1,28 @@
 import React, { useState } from "react";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Home = () => {
+  const axiosSecure = useAxiosSecure();
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
-  // Function to generate random 6-8 character code
-  const generateShortCode = () => {
-    const characters =
-      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const length = Math.floor(Math.random() * 3) + 6; // 6 to 8 characters
-    let result = "";
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(
-        Math.floor(Math.random() * characters.length)
-      );
+  const handleShorten = async () => {
+    try {
+      const { data } = await axiosSecure.post("/generate-shortCode", {
+        longUrl,
+      });
+      const { shortCode } = data;
+      const shortUrl = `${import.meta.env.VITE_SERVER_URL}/${shortCode}`;
+      setShortUrl(shortUrl);
+      setCopied(false);
+    } catch (error) {
+      console.error("Shorten Error:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        "Something went wrong. Please try again.";
+      alert(errorMessage);
     }
-    return result;
-  };
-
-  const handleShorten = () => {
-    if (!longUrl) return alert("Please paste a URL first!");
-
-    const code = generateShortCode();
-    const finalUrl = `https://tiny.url/${code}`;
-    setShortUrl(finalUrl);
-    setCopied(false);
   };
 
   const copyToClipboard = () => {
@@ -95,7 +92,6 @@ const Home = () => {
             </div>
           )}
         </div>
-
       </div>
     </section>
   );
