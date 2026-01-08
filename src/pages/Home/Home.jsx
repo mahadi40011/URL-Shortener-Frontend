@@ -83,7 +83,8 @@ const Home = () => {
 
             <button
               onClick={handleShorten}
-              className="w-full md:w-auto px-10 py-4 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-lg shadow-lg shadow-cyan-500/30 transition-all active:scale-95 whitespace-nowrap"
+              disabled={longUrl.length === 0}
+              className="w-full md:w-auto px-10 py-4 rounded-xl bg-green-600 hover:bg-green-700 disabled:hover:bg-green-600 text-white font-bold text-lg shadow-lg shadow-cyan-500/30 transition-all active:scale-95 disabled:scale-100 whitespace-nowrap cursor-pointer disabled:cursor-not-allowed"
             >
               Generate Short URL
             </button>
