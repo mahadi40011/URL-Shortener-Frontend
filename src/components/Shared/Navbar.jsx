@@ -65,7 +65,7 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             {loading ? (
               <div className="h-10 w-10 rounded-full bg-gray-100 animate-pulse flex items-center justify-center">
-                <span className="loading loading-spinner loading-sm text-lime-500"></span>
+                <span className="loading loading-spinner loading-sm text-green-500"></span>
               </div>
             ) : user ? (
               <div className="dropdown dropdown-end hidden lg:block">
@@ -107,7 +107,7 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/login"
-                className="hidden lg:flex items-center bg-lime-600 hover:bg-lime-800 text-white px-8 py-2.5 rounded-full font-bold text-xs  uppercase tracking-widest transition-all shadow-lg hover:shadow-lime-200 active:scale-95"
+                className="hidden lg:flex items-center bg-green-600 hover:bg-green-700 text-white px-8 py-2.5 rounded-full font-bold text-xs  uppercase tracking-widest transition-all shadow-lg hover:shadow-green-200 active:scale-95"
               >
                 Login
               </Link>
