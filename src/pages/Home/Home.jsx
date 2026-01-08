@@ -1,14 +1,27 @@
 import React, { useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
+import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router";
+import LoadingSpinner from "../../components/Shared/LoadingSpinner";
 
 const Home = () => {
+  const { user, loading } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const navigate = useNavigate();
 
   const handleShorten = async () => {
+    if (!user) {
+      const proceed = window.confirm(
+        "Oops! You are not authorized. Please log in to continue."
+      );
+      if (proceed) navigate("/login");
+      return;
+    }
+
     try {
       const { data } = await axiosSecure.post("/generate-shortCode", {
         longUrl,
@@ -31,6 +44,8 @@ const Home = () => {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (loading) return <LoadingSpinner />;
 
   return (
     <section
