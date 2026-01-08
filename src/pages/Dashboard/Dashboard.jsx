@@ -1,8 +1,29 @@
 import React from "react";
 import Container from "../../components/Shared/Container";
 import DashboardTableRow from "../../components/TableRows/DashboardTableRow";
+import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "../../components/Shared/LoadingSpinner";
 
 const Dashboard = () => {
+  const { user, loading } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
+  const {
+    data: urlsData = [],
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["Requested Booking", user?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure(`/all-urls`);
+      return data;
+    },
+  });
+
+  if (isLoading & loading) return <LoadingSpinner />;
+
   return (
     <div className="pt-24 pb-8">
       <Container>
@@ -11,7 +32,7 @@ const Dashboard = () => {
             <thead className="sticky top-0">
               <tr className="bg-green-500/80 text-white uppercase font-semibold text-xs leading-normal">
                 <th className="py-4 px-6 border-r border-gray-300 text-center">
-                  serial no
+                  sl no
                 </th>
                 <th className="py-4 px-6 border-r border-gray-300 text-left">
                   Original URL
@@ -33,16 +54,16 @@ const Dashboard = () => {
             </thead>
 
             <tbody className="text-gray-700 text-sm font-light">
-              <DashboardTableRow />
-              <DashboardTableRow />
-              <DashboardTableRow />
-              <DashboardTableRow />
-              <DashboardTableRow />
-              <DashboardTableRow />
-              <DashboardTableRow />
-              <DashboardTableRow />
-              <DashboardTableRow />
-              <DashboardTableRow />
+              {urlsData &&
+                urlsData.length > 0 &&
+                urlsData.map((urlData, index) => (
+                  <DashboardTableRow
+                    key={urlData._id}
+                    index={index + 1}
+                    urlData={urlData}
+                    refetch={refetch}
+                  />
+                ))}
             </tbody>
           </table>
         </div>

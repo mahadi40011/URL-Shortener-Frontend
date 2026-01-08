@@ -1,35 +1,32 @@
 import React from "react";
 import { FaRegCopy } from "react-icons/fa6";
 
-const DashboardTableRow = () => {
-  // const handleStatusUpdate = async (newStatus) => {
-  //   try {
-  //     const { data } = await axiosSecure.patch(`/tickets/${_id}`, {
-  //       status: newStatus,
-  //     });
+const DashboardTableRow = ({ urlData, index }) => {
+  const { longUrl, shortCode, totalVisit, createdAt } = urlData;
+  const dateObj = new Date(createdAt);
 
-  //     if (data.modifiedCount > 0) {
-  //       refetch();
-  //       toast.success(`Status updated to ${newStatus}`);
-  //     }
-  //   } catch (err) {
-  //     toast.error(err);
-  //   }
-  // };
+  const date = dateObj.toLocaleDateString("en-GB");
+  const time = dateObj.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
 
   return (
     <tr className="border-b border-gray-200 hover:bg-green-50 transition-colors">
       <td className="py-3 px-6 text-center border-r border-gray-200 font-medium">
-        1
+        {index}
       </td>
       <td className="py-3 px-6 text-left border-r border-gray-200 font-medium truncate max-w-xs">
-        https://drive.google.com/file/d/1r5a7hs0QdoFYptxVmfrwpzBGqfrBFWXX/view
+        {longUrl}
       </td>
       <td className="py-3 px-6 text-center border-r border-gray-200">
-        adge34j
+        {shortCode}
       </td>
-      <td className="py-3 px-6 flex items-center justify-between gap-3 border-r border-gray-200 ">
-        <span className="text-blue-400">https://adge34j</span>
+      <td className="py-3 px-6 flex items-center justify-between gap-3 border-r border-gray-200">
+        <span className="text-blue-400 truncate max-w-44">{`${
+          import.meta.env.VITE_SERVER_URL
+        }/${shortCode}`}</span>
         <button
           className="flex items-center gap-1 
                text-gray-600 hover:text-blue-600
@@ -41,10 +38,13 @@ const DashboardTableRow = () => {
       </td>
 
       <td className="py-3 px-6 text-center border-r border-gray-200 font-bold whitespace-nowrap">
-        45
+        {totalVisit}
       </td>
       <td className="py-3 px-6 text-center border-r border-gray-200">
-        2-3-25 20:40
+        <div className="flex flex-col">
+          <span className="font-medium text-gray-800">{date}</span>
+          <span className="text-xs text-gray-500">{time}</span>
+        </div>
       </td>
       <td className="py-3 px-6 text-left text-xs">
         <div className="flex items-center justify-center gap-3">

@@ -7,7 +7,7 @@ const LoadingSpinner = ({ smallHeight }) => {
       flex 
       flex-col 
       justify-center 
-      items-center bg-green-50 `}
+      items-center `}
     >
       <FadeLoader size={100} color="green" />
     </div>
