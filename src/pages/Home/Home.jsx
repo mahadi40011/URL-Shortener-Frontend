@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const axiosSecure = useAxiosSecure();
@@ -21,7 +22,7 @@ const Home = () => {
       const errorMessage =
         error.response?.data?.message ||
         "Something went wrong. Please try again.";
-      alert(errorMessage);
+      toast.error(errorMessage);
     }
   };
 

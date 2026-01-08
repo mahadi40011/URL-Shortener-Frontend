@@ -6,6 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { MdOutlineEmail } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const { signIn, signInWithGoogle, loading, setLoading } = useAuth();
@@ -25,12 +26,13 @@ const Login = () => {
   const onSubmit = (data) => {
     setLoading(true);
     signIn(data.email, data.password)
-      .then((result) => {
-        console.log("User Logged In:", result.user);
+      .then(() => {
+        toast.success("Login Successful");
         navigate(from, { replace: true });
       })
       .catch((error) => {
         console.error("Login Error:", error.message);
+        toast.error("Login failed. Please try again.");
       })
       .finally(setLoading(false));
   };
@@ -39,8 +41,14 @@ const Login = () => {
   const handleGoogleLogin = () => {
     setLoading(true);
     signInWithGoogle()
-      .then(() => navigate(from, { replace: true }))
-      .catch((err) => console.log(err))
+      .then(() => {
+        toast.success("Login Successful");
+        navigate(from, { replace: true });
+      })
+      .catch((err) => {
+        console.error("Login Error:", err.message);
+        toast.error("Login failed. Please try again.");
+      })
       .finally(setLoading(false));
   };
 

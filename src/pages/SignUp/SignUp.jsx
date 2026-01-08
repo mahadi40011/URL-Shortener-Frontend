@@ -6,6 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { MdOutlineEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
   const {
@@ -18,25 +19,29 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-const {
-  register,
-  handleSubmit,
-  watch,
-  formState: { errors, isValid, isDirty },
-} = useForm({
-  mode: "all",
-});
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isValid, isDirty },
+  } = useForm({
+    mode: "all",
+  });
 
   const password = watch("password");
+
+  // Email/Password sign up
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const result = await createUser(data.email, data.password);
+      await createUser(data.email, data.password);
       await updateUserProfile(data.name);
-      console.log("Account Created:", result.user);
+
+      toast.success("Sign Up Successful");
       navigate("/");
     } catch (error) {
       console.error("Signup Error:", error.message);
+      toast.error("Sign Up failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -45,8 +50,14 @@ const {
   const handleGoogleSignup = () => {
     setLoading(true);
     signInWithGoogle()
-      .then(() => navigate("/"))
-      .catch((err) => console.log(err))
+      .then(() => {
+        toast.success("Sign Up Successful");
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error("Sign Up Error:", err.message);
+        toast.error("Sign Up failed. Please try again.");
+      })
       .finally(() => setLoading(false));
   };
 
@@ -218,8 +229,8 @@ const {
             disabled={loading || !isValid || !isDirty}
             className={`w-full py-4 rounded-xl font-bold shadow-lg transition-all active:scale-[0.98] disabled:opacity-70 cursor-pointer disabled:cursor-not-allowed ${
               !isValid || !isDirty
-                ? "bg-gray-200 text-gray-400 shadow-none" 
-                : "bg-green-600 text-white hover:bg-green-700 shadow-green-600/20" 
+                ? "bg-gray-200 text-gray-400 shadow-none"
+                : "bg-green-600 text-white hover:bg-green-700 shadow-green-600/20"
             }`}
           >
             <div className="flex items-center justify-center gap-2">

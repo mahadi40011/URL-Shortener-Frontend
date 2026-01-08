@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaRegCopy } from "react-icons/fa6";
 import { TiTick } from "react-icons/ti";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
 const DashboardTableRow = ({ urlData, index, refetch }) => {
   const [copied, setCopied] = useState(false);
@@ -34,11 +35,11 @@ const DashboardTableRow = ({ urlData, index, refetch }) => {
 
         if (data.success) {
           refetch();
-          alert(data.message || "Deleted successfully!");
+          toast.success(data.message || "Deleted successfully!");
         }
       } catch (error) {
         console.error("Delete Error:", error);
-        alert(error.response?.data?.message || "Could not delete the URL");
+        toast.error(error.response?.data?.message || "Could not delete the URL");
       }
     }
   };
